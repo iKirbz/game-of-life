@@ -1,13 +1,25 @@
-import { useState } from "react";
 import styles from "./styles.module.css";
+import type { IHandleClick } from "../grid";
 
-export default function Cell({ onClick }: { onClick: () => void }) {
-  const [isActive, setIsActive] = useState(false);
+export default function Cell({
+  column,
+  row,
+  handleCellClick,
+  active,
+}: {
+  column: number;
+  row: number;
+  handleCellClick: IHandleClick;
+  active: boolean;
+}) {
+  const onClick = () => {
+    handleCellClick({ column, row });
+  };
 
   return (
     <div
-      onClick={() => setIsActive(!isActive)}
-      className={`${styles.cell} ${isActive ? styles.active : ""}`}
+      onClick={onClick}
+      className={`${styles.cell} ${active ? styles.active : ""}`}
     />
   );
 }
