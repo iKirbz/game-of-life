@@ -19,35 +19,48 @@ export default function Grid({ width, height }: GridProps) {
     setGrid([...grid]);
   };
 
+  const [start, setStart] = useState(false);
+
   useEffect(() => {
+    if (!start) return;
     const interval = setInterval(() => {
       console.log("running simulation");
       runSimulation({ grid, setGrid });
-    }, 3000);
+    }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [start, grid]);
 
   return (
-    <div
-      className={styles.grid}
-      style={{
-        "--width": width,
-        "--height": height,
-      }}
-    >
-      {grid.map((columns, columnIndex) =>
-        columns.map((value, rowIndex) => (
-          <Cell
-            key={`${columnIndex}-${rowIndex}`}
-            column={columnIndex}
-            row={rowIndex}
-            active={value}
-            handleCellClick={handleCellClick}
-          />
-        ))
-      )}
-    </div>
+    <>
+      <button
+        onClick={() => {
+          setStart(!start);
+        }}
+      >
+        {start ? "Stop" : "Start"}
+      </button>
+
+      <div
+        className={styles.grid}
+        style={{
+          "--width": width,
+          "--height": height,
+        }}
+      >
+        {grid.map((columns, columnIndex) =>
+          columns.map((value, rowIndex) => (
+            <Cell
+              key={`${columnIndex}-${rowIndex}`}
+              column={columnIndex}
+              row={rowIndex}
+              active={value}
+              handleCellClick={handleCellClick}
+            />
+          ))
+        )}
+      </div>
+    </>
   );
 }
 
@@ -66,23 +79,29 @@ function runSimulation({
   grid: boolean[][];
   setGrid: Dispatch<SetStateAction<boolean[][]>>;
 }) {
-  const newGrid = [...grid];
+  const newGrid = JSON.parse(JSON.stringify(grid));
   for (let column = 0; column < grid.length; column++) {
     for (let row = 0; row < grid[column].length; row++) {
-      const cell = grid[column][row];
       const neighborCount = getNeighborCount({ grid, column, row });
 
-      if (cell && neighborCount < 2) {
-        newGrid[column][row] = false;
-      } else if (cell && neighborCount > 3) {
-        newGrid[column][row] = false;
-      } else if (!cell && neighborCount === 3) {
-        newGrid[column][row] = true;
+      // alive cells with 2 or 3 neighbors
+      if (grid[column][row]) {
+        if (neighborCount === 2 || neighborCount === 3) {
+          newGrid[column][row] = true;
+        } else {
+          newGrid[column][row] = false;
+        }
+      }
+      // dead cells with exactly 3 neighbors
+      else {
+        if (neighborCount === 3) {
+          newGrid[column][row] = true;
+        }
       }
     }
   }
 
-  setGrid([...newGrid]);
+  setGrid(newGrid);
 }
 
 function getNeighborCount({
