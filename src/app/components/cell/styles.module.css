@@ -1,0 +1,10 @@
+.cell {
+  width: 30px;
+  height: 30px;
+  background: black;
+  cursor: pointer;
+}
+
+.cell.active {
+  background: white;
+}

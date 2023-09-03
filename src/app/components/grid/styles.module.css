@@ -1,0 +1,10 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--width), 30px);
+  grid-template-rows: repeat(var(--height), 30px);
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+}
