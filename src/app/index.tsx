@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import GridComponent from "./components/grid";
-
-import styles from "./styles.module.css";
+import ActionsBar from "./action-bar";
 
 // state machine interface
 export enum State {
@@ -13,6 +12,12 @@ export enum State {
 function App() {
   const [state, setState] = useState(State.Stopped);
 
+  const handleStateChange = () => {
+    setState((state) =>
+      state === State.Running ? State.Stopped : State.Running
+    );
+  };
+
   return (
     <>
       <TransformWrapper>
@@ -20,18 +25,7 @@ function App() {
           <GridComponent width={80} height={40} state={state} />
         </TransformComponent>
       </TransformWrapper>
-
-      <div className={styles.actionsBar}>
-        <button
-          onClick={() => {
-            setState((state) =>
-              state === State.Running ? State.Stopped : State.Running
-            );
-          }}
-        >
-          {state === State.Running ? "Stop" : "Start"}
-        </button>
-      </div>
+      <ActionsBar state={state} handleStateChange={handleStateChange} />
     </>
   );
 }
