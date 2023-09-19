@@ -43,6 +43,10 @@
   justify-content: center;
 }
 
+.sliderBar {
+  margin-right: 1rem !important;
+}
+
 .sliderNumber {
   width: 4rem;
   text-align: right;
