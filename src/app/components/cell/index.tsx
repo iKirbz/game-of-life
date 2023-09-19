@@ -4,13 +4,13 @@ import type { IHandleClick } from "../grid";
 export default function Cell({
   column,
   row,
-  handleCellClick,
   active,
+  handleCellClick,
 }: {
   column: number;
   row: number;
-  handleCellClick: IHandleClick;
   active: boolean;
+  handleCellClick: IHandleClick;
 }) {
   const onClick = () => {
     handleCellClick({ column, row });

@@ -1,6 +1,12 @@
 import Cell from "../cell";
 import styles from "./styles.module.css";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 interface GridProps {
   width: number;
@@ -13,13 +19,12 @@ export interface IHandleClick {
 
 export default function Grid({ width, height }: GridProps) {
   const [grid, setGrid] = useState(getGrid({ width, height }));
+  const [start, setStart] = useState(false);
 
   const handleCellClick: IHandleClick = ({ column, row }) => {
     grid[column][row] = !grid[column][row];
     setGrid([...grid]);
   };
-
-  const [start, setStart] = useState(false);
 
   useEffect(() => {
     if (!start) return;
@@ -43,18 +48,20 @@ export default function Grid({ width, height }: GridProps) {
 
       <div
         className={styles.grid}
-        style={{
-          "--width": width,
-          "--height": height,
-        }}
+        style={
+          {
+            "--width": width,
+            "--height": height,
+          } as CSSProperties
+        }
       >
         {grid.map((columns, columnIndex) =>
-          columns.map((value, rowIndex) => (
+          columns.map((state, rowIndex) => (
             <Cell
               key={`${columnIndex}-${rowIndex}`}
               column={columnIndex}
               row={rowIndex}
-              active={value}
+              active={state}
               handleCellClick={handleCellClick}
             />
           ))
