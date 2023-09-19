@@ -1,5 +1,3 @@
-import Cell from "../cell";
-import styles from "./styles.module.css";
 import {
   CSSProperties,
   Dispatch,
@@ -7,45 +5,42 @@ import {
   useEffect,
   useState,
 } from "react";
+import { State } from "../..";
+import Cell from "../cell";
+import styles from "./styles.module.css";
 
 interface GridProps {
   width: number;
   height: number;
+  state: State;
 }
 
 export interface IHandleClick {
   ({ column, row }: { column: number; row: number }): void;
 }
 
-export default function Grid({ width, height }: GridProps) {
+export default function Grid({ width, height, state }: GridProps) {
   const [grid, setGrid] = useState(getGrid({ width, height }));
-  const [start, setStart] = useState(false);
 
   const handleCellClick: IHandleClick = ({ column, row }) => {
+    // if (controllerState !== ControllerState.Idle) return;
     grid[column][row] = !grid[column][row];
     setGrid([...grid]);
   };
 
   useEffect(() => {
-    if (!start) return;
+    if (state !== State.Running) return;
+
     const interval = setInterval(() => {
       console.log("running simulation");
       runSimulation({ grid, setGrid });
     }, 100);
 
     return () => clearInterval(interval);
-  }, [start, grid]);
+  }, [state, grid]);
 
   return (
     <>
-      <button
-        onClick={() => {
-          setStart(!start);
-        }}
-      >
-        {start ? "Stop" : "Start"}
-      </button>
-
       <div
         className={styles.grid}
         style={
