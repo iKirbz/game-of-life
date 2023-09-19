@@ -11,6 +11,7 @@ export enum State {
 
 function App() {
   const [state, setState] = useState(State.Stopped);
+  const [speed, setSpeed] = useState(30);
 
   const handleStateChange = () => {
     setState((state) =>
@@ -20,12 +21,17 @@ function App() {
 
   return (
     <>
-      <TransformWrapper>
+      <TransformWrapper disablePadding={true}>
         <TransformComponent>
-          <GridComponent width={80} height={40} state={state} />
+          <GridComponent width={60} height={30} state={state} speed={speed} />
         </TransformComponent>
       </TransformWrapper>
-      <ActionsBar state={state} handleStateChange={handleStateChange} />
+      <ActionsBar
+        state={state}
+        handleStateChange={handleStateChange}
+        speed={speed}
+        setSpeed={setSpeed}
+      />
     </>
   );
 }

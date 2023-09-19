@@ -13,13 +13,14 @@ interface GridProps {
   width: number;
   height: number;
   state: State;
+  speed: number;
 }
 
 export interface IHandleClick {
   ({ column, row }: { column: number; row: number }): void;
 }
 
-export default function Grid({ width, height, state }: GridProps) {
+export default function Grid({ width, height, state, speed }: GridProps) {
   const [grid, setGrid] = useState(getGrid({ width, height }));
 
   const handleCellClick: IHandleClick = ({ column, row }) => {
@@ -34,7 +35,7 @@ export default function Grid({ width, height, state }: GridProps) {
     const interval = setInterval(() => {
       console.log("running simulation");
       runSimulation({ grid, setGrid });
-    }, 100);
+    }, Math.ceil(5000 / speed));
 
     return () => clearInterval(interval);
   }, [state, grid]);
